@@ -1,4 +1,5 @@
 defmodule RealDealApi.MixProject do
+
   use Mix.Project
 
   def project do
@@ -16,6 +17,7 @@ defmodule RealDealApi.MixProject do
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
+  
   def application do
     [
       mod: {RealDealApi.Application, []},
@@ -41,7 +43,9 @@ defmodule RealDealApi.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:bcrypt_elixir, "~> 3.2"},
+      {:guardian, "~> 2.3"}
     ]
   end
 
