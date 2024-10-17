@@ -23,7 +23,7 @@ defmodule RealDealApiWeb.AccountJSON do
     }
   end
 
-  def render("account.json") do
+  def render("account.json", %{account: account} ) do
     %{
       id: account.id,
       email: account.email,
