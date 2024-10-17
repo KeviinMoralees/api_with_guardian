@@ -71,7 +71,7 @@ defmodule RealDealApi.Users do
     user
     |> User.changeset(attrs)
     |> Repo.update()
-  end
+  end 
 
   @doc """
   Deletes a user.

@@ -39,7 +39,7 @@ defmodule RealDealApiWeb.Auth.Guardian do
   end
 
   defp create_token(account) do
-    {:ok, toke, _claims} = encode_and_sign(account)
+    {:ok, token, _claims} = encode_and_sign(account)
     {:ok. account, token}
   end
 
