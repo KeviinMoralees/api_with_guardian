@@ -35,7 +35,7 @@ defmodule RealDealApiWeb.Auth.Guardian do
   end
 
   defp validate_password(password, hash_password) do
-    Bcript.verify_pass(password, hash_password)
+    Bcrypt.verify_pass(password, hash_password)
   end
 
   defp create_token(account) do
