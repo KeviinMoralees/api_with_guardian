@@ -14,7 +14,7 @@ defmodule RealDealApiWeb.Auth.SetAccount do
       if account_id = nil, do: raise(Unauthorized)
       account = Accounts.get_account!(account_id)
       cond do
-        account_id && account -> assing(conn, :account, account)
+        account_id && account -> assign(conn, :account, account)
         true -> assign(conn, :account, nil)
       end
     end
