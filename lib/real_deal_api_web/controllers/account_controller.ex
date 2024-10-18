@@ -29,6 +29,7 @@ defmodule RealDealApiWeb.AccountController do
       {:error, :unauthorized} -> raise Unauthorized, message: "Email or Password incorrect"
       {:ok, account, token} ->
         conn
+        |> Plug.Conn.put_session(:account_id, account.id)
         |> put_status(200)
         |> render("account_token.json", %{account: account, token: token})
     end
@@ -38,8 +39,8 @@ defmodule RealDealApiWeb.AccountController do
 
 
   def show(conn, %{"id" => id}) do
-    account = Accounts.get_account!(id)
-    render(conn, :show, account: account)
+    # account = Accounts.get_account!(id)
+    render(conn, :show, account: conn.assings.account)
   end
 
   def update(conn, %{"id" => id, "account" => account_params}) do
