@@ -25,7 +25,7 @@ defmodule RealDealApiWeb.Auth.Guardian do
 
   def authenticate(email, password) do
     case Accounts.get_account_by_email!(email) do
-      nil -> {:error, :unauthored}
+      nil -> {:error, :unauthorized}
       account ->
         case validate_password(password, account.hash_password) do
           true -> create_token(account)
@@ -40,7 +40,7 @@ defmodule RealDealApiWeb.Auth.Guardian do
 
   defp create_token(account) do
     {:ok, token, _claims} = encode_and_sign(account)
-    {:ok. account, token}
+    {:ok, account, token}
   end
 
 end
