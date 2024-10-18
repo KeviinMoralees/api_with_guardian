@@ -1,7 +1,7 @@
 defmodule RealDealApiWeb.Auth.SetAccount do
   import Plug.Conn
   alias RealDealApiWeb.Auth.ErrorResponse.Unauthorized
-  alias RealDealApiWeb.Accounts
+  alias RealDealApi.Accounts
 
   def init(_options) do
   end
