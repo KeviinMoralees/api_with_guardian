@@ -40,7 +40,7 @@ defmodule RealDealApiWeb.AccountController do
 
   def show(conn, %{"id" => id}) do
     # account = Accounts.get_account!(id)
-    render(conn, :show, account: conn.assings.account)
+    render(conn, :show, account: conn.assigns.account)
   end
 
   def update(conn, %{"id" => id, "account" => account_params}) do
