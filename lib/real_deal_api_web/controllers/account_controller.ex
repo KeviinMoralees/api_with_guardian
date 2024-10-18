@@ -39,10 +39,9 @@ defmodule RealDealApiWeb.AccountController do
 
 
   def show(conn, %{"id" => id}) do
-    # account = Accounts.get_account!(id)
-    render(conn, :show, account: conn.assigns.account)
+    account = Accounts.get_account!(id)
+    render(conn, "show.json", account: account)
   end
-
   def update(conn, %{"id" => id, "account" => account_params}) do
     account = Accounts.get_account!(id)
 
@@ -50,6 +49,7 @@ defmodule RealDealApiWeb.AccountController do
       render(conn, :show, account: account)
     end
   end
+
 
   def delete(conn, %{"id" => id}) do
     account = Accounts.get_account!(id)

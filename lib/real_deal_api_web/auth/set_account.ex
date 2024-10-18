@@ -6,12 +6,14 @@ defmodule RealDealApiWeb.Auth.SetAccount do
   def init(_options) do
   end
 
-  def call(conn, _opts) do
+  def call(conn, _options) do
     if conn.assigns[:account] do
       conn
     else
       account_id = get_session(conn, :account_id)
-      if account_id = nil, do: raise(Unauthorized)
+
+      if account_id == nil, do: raise ErrorResponse.Unauthorized
+
       account = Accounts.get_account!(account_id)
       cond do
         account_id && account -> assign(conn, :account, account)
