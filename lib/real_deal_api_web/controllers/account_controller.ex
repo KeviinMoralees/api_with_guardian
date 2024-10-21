@@ -7,8 +7,10 @@ defmodule RealDealApiWeb.AccountController do
   alias RealDealApiWeb.Auth.ErrorResponse.Unauthorized
   alias RealDealApiWeb.Auth.ErrorResponse.Forbidden
   alias RealDealApi.Repo
-  
-  plug :is_authorized_account when action in [:update, :delete]
+
+  import RealDealApiWeb.Auth.AuthorizedPlug
+
+  plug :is_authorized when action in [:update, :delete]
 
   action_fallback RealDealApiWeb.FallbackController
 
