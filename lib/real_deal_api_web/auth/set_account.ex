@@ -12,7 +12,7 @@ defmodule RealDealApiWeb.Auth.SetAccount do
     else
       account_id = get_session(conn, :account_id)
 
-      if account_id == nil, do: raise ErrorResponse.Unauthorized
+      if account_id == nil, do: raise Unauthorized
 
       account = Accounts.get_account!(account_id)
       cond do

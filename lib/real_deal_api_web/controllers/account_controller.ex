@@ -5,6 +5,8 @@ defmodule RealDealApiWeb.AccountController do
   alias RealDealApi.{Accounts, Accounts.Account, Users, Users.User}
   alias RealDealApi.Accounts.Account
   alias RealDealApiWeb.Auth.ErrorResponse.Unauthorized
+  alias RealDealApiWeb.Auth.ErrorResponse.Forbidden
+
 
   plug :is_authorized_account when action in [:update, :delete]
 
@@ -18,7 +20,7 @@ defmodule RealDealApiWeb.AccountController do
     if conn.assigns.account.id == account.id do
       conn
     else
-      raise ErrorResponse.Forbidden
+      raise Forbidden
     end
   end
 
@@ -52,7 +54,7 @@ defmodule RealDealApiWeb.AccountController do
     end
   end
 
-  
+
 
  def sign_out(conn, %{}) do
     account = conn.assigns[:account]
