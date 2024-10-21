@@ -1,9 +1,9 @@
 defmodule RealDealApiWeb.Router do
   use RealDealApiWeb, :router
-  #para poder leer el error que estamos mandando al aire en el login
+  # para poder leer el error que estamos mandando al aire en el login
   use Plug.ErrorHandler
 
-  #debemos implementar dos funciones para manejar el error
+  # debemos implementar dos funciones para manejar el error
   defp handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{message: message}}) do
     conn |> json(%{errors: message}) |> halt()
   end
@@ -11,7 +11,6 @@ defmodule RealDealApiWeb.Router do
   defp handle_errors(conn, %{reason: %{message: message}}) do
     conn |> json(%{errors: message}) |> halt()
   end
-
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -34,8 +33,7 @@ defmodule RealDealApiWeb.Router do
     pipe_through [:api, :auth]
     get "/accounts/by_id/:id", AccountController, :show
     get "accounts/sign_out", AccountController, :sign_out
-    get "/accounts/refresh_session", AccountController,:refresh_session
-    post "/accounts/update", AccountController, :update 
-
+    get "/accounts/refresh_session", AccountController, :refresh_session
+    post "/accounts/update", AccountController, :update
   end
-end 
+end

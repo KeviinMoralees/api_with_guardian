@@ -21,7 +21,11 @@ defmodule RealDealApi.UsersTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{full_name: "some full_name", gender: "some gender", biography: "some biography"}
+      valid_attrs = %{
+        full_name: "some full_name",
+        gender: "some gender",
+        biography: "some biography"
+      }
 
       assert {:ok, %User{} = user} = Users.create_user(valid_attrs)
       assert user.full_name == "some full_name"
@@ -35,7 +39,12 @@ defmodule RealDealApi.UsersTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{full_name: "some updated full_name", gender: "some updated gender", biography: "some updated biography"}
+
+      update_attrs = %{
+        full_name: "some updated full_name",
+        gender: "some updated gender",
+        biography: "some updated biography"
+      }
 
       assert {:ok, %User{} = user} = Users.update_user(user, update_attrs)
       assert user.full_name == "some updated full_name"

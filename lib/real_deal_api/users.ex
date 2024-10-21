@@ -49,7 +49,7 @@ defmodule RealDealApi.Users do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(account,attrs \\ %{}) do
+  def create_user(account, attrs \\ %{}) do
     account
     |> Ecto.build_assoc(:user)
     |> User.changeset(attrs)

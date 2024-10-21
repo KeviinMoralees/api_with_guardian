@@ -16,7 +16,7 @@ defmodule RealDealApi.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:account_id ,:full_name, :gender, :biography])
+    |> cast(attrs, [:account_id, :full_name, :gender, :biography])
     |> validate_required([:account_id])
   end
 end
