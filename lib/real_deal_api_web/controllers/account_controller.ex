@@ -6,7 +6,8 @@ defmodule RealDealApiWeb.AccountController do
   alias RealDealApi.Accounts.Account
   alias RealDealApiWeb.Auth.ErrorResponse.Unauthorized
   alias RealDealApiWeb.Auth.ErrorResponse.Forbidden
-
+  alias RealDealApi.Repo
+  
   plug :is_authorized_account when action in [:update, :delete]
 
   action_fallback RealDealApiWeb.FallbackController
@@ -34,64 +35,43 @@ defmodule RealDealApiWeb.AccountController do
     end
   end
 
-  def sign_in(conn, %{"email" => email, "password" => password}) do
-    authorize_account(conn, email, password)
+  def sign_in(conn, %{"email" => email, "hash_password" => hash_password}) do
+    authorize_account(conn, email, hash_password)
   end
 
-  def authorize_account(conn, email, hash_password) do
-    case Guardian.authenticate(email, password) do
-      {:error, :unauthorized} ->
-        raise Unauthorized, message: "Email or Password incorrect"
-
+  defp authorize_account(conn, email, hash_password) do
+    case Guardian.authenticate(email, hash_password) do
       {:ok, account, token} ->
         conn
         |> Plug.Conn.put_session(:account_id, account.id)
-        |> put_status(200)
+        |> put_status(:ok)
         |> render("account_token.json", %{account: account, token: token})
+      {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Email or Password incorrect."
     end
   end
 
   def refresh_session(conn, %{}) do
-    old_token = Guardian.Plug.current_token(conn)
-
-    case Guardian.decode_and_verify(old_token) do
-      {:ok, claims} ->
-        case Guardian.resource_from_claims(claims) do
-          {:ok, account} ->
-            {:ok, _old, {new_token, _new_claims}} = Guardian.refresh(old_token)
-
-            conn
-            |> Plug.Conn.put_session(:account_id, account.id)
-            |> put_status(:ok)
-            |> render("account_token.json", %{account: account, token: new_token})
-
-          {:error, _reason} ->
-            raise ErrorResponse.NotFound
-        end
-
-      {:error, _reason} ->
-        raise
-        raise ErrorResponse.NotFound
-    end
+    token = Guardian.Plug.current_token(conn)
+    {:ok, account, new_token} = Guardian.authenticate(token)
+    conn
+    |> Plug.Conn.put_session(:account_id, account.id)
+    |> put_status(:ok)
+    |> render("account_token.json", %{account: account, token: new_token})
   end
 
   def sign_out(conn, %{}) do
     account = conn.assigns[:account]
     token = Guardian.Plug.current_token(conn)
     Guardian.revoke(token)
-
     conn
     |> Plug.Conn.clear_session()
     |> put_status(:ok)
     |> render("account_token.json", %{account: account, token: nil})
   end
 
-  def refresh_session(conn, %{}) do
-  end
-
   def show(conn, %{"id" => id}) do
-    account = Accounts.get_account!(id)
-    render(conn, "show.json", account: account)
+    account = Accounts.get_full_account(id) |> Repo.preload(:user)
+    render(conn, "full_account.json", account: account)
   end
 
   def update(conn, %{"account" => account_params}) do

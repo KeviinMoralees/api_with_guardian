@@ -24,42 +24,44 @@ defmodule RealDealApiWeb.Auth.Guardian do
   end
 
   def authenticate(email, password) do
-    case Accounts.get_account_by_email!(email) do
-      nil -> {:error, :unauthorized}
+    case Accounts.get_account_by_email(email) do
+      nil -> {:error, :unauthored}
       account ->
         case validate_password(password, account.hash_password) do
           true -> create_token(account, :access)
           false -> {:error, :unauthorized}
         end
+
     end
   end
 
   def authenticate(token) do
-      with {:ok, claims} <- decode_and_verif(token)
-           {:ok, account} <- resource_from_claims(claims)
-           {:ok, _old{new_token, _claims}} <- refresh(token)
-       {:ok , account, new_token}
-      end
+    with {:ok, claims} <- decode_and_verify(token),
+         {:ok, account} <- resource_from_claims(claims),
+         {:ok, _old, {new_token, _claims}} <- refresh(token) do
+
+      {:ok, account, new_token}
+    end
   end
-  
+
   defp validate_password(password, hash_password) do
     Bcrypt.verify_pass(password, hash_password)
   end
 
   defp create_token(account, type) do
-    {:ok, token, _claims} = encode_and_sign(account, %{},token_options(type))
+    {:ok, token, _claims} = encode_and_sign(account, %{}, token_options(type))
     {:ok, account, token}
   end
 
-    defp token_options(type) do
-      case type do
-        :acess -> [token_type: "access",ttl: {2, :hour}]
-        :reset -> [token_type: "aceess", ttl: {2, :hour}]
-        :admin -> [token_type: "admin" ,ttl: {2, :hour}]
-      end
+  defp token_options(type) do
+    case type do
+      :access -> [token_type: "access", ttl: {2, :hour}]
+      :reset -> [token_type: "reset", ttl: {15, :minute}]
+      :admin -> [token_type: "admin", ttl: {90, :day}]
     end
-  
-   def after_encode_and_sign(resource, claims, token, _options) do
+  end
+
+  def after_encode_and_sign(resource, claims, token, _options) do
     with {:ok, _} <- Guardian.DB.after_encode_and_sign(resource, claims["typ"], claims, token) do
       {:ok, token}
     end
@@ -82,4 +84,5 @@ defmodule RealDealApiWeb.Auth.Guardian do
       {:ok, claims}
     end
   end
-  
+
+end
