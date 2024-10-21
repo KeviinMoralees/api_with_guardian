@@ -47,14 +47,33 @@ defmodule RealDealApiWeb.AccountController do
     case Guardian.authenticate(email, password) do
       {:error, :unauthorized} -> raise Unauthorized, message: "Email or Password incorrect"
       {:ok, account, token} ->
-        conn
+        conn 
         |> Plug.Conn.put_session(:account_id, account.id)
         |> put_status(200)
         |> render("account_token.json", %{account: account, token: token})
     end
   end
 
+  def refresh_session(conn, %{}) do
+    old_token = Guardian.Plug.current_token(conn)
+    case Guardian.decode_and_verify(old_token) do
+      {:ok, claims} -> 
+        IO.inspect claims
+        case Guardian.resource_from_claims(claims) do
+          {:ok, account} -> 
+            {:ok, _old,{new_token, _new_claims}} = Guardian.refresh(old_token)
+            conn 
+            |> Plug.Conn.put_session(:account_id, account.id)
+            |> put_status(:ok)
+            |> render("account_token.json", %{account: account, token: new_token})
 
+          {:error, _reason} -> 
+            raise ErrorResponse.NotFound
+        end
+      {:error ,_reason} -> 
+        raise ErrorResponse.NotFound
+      end
+  end
 
  def sign_out(conn, %{}) do
     account = conn.assigns[:account]
@@ -65,7 +84,9 @@ defmodule RealDealApiWeb.AccountController do
     |> put_status(:ok)
     |> render("account_token.json", %{account: account, token: nil})
   end
-
+  def refresh_session(conn , %{}) do
+    
+  end 
   def show(conn, %{"id" => id}) do
     account = Accounts.get_account!(id)
     render(conn, "show.json", account: account)

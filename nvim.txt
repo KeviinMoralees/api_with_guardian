@@ -1,0 +1,50 @@
+call plug#begin('~/.localshare/nvim/plugged')
+
+" Aquí van tus plugins, por ejemplo:
+Plug 'shaunsingh/nord.nvim'
+Plug 'elixir-lang/vim-elixir'     " Resaltado de sintaxis e indentación
+Plug 'dense-analysis/ale'           " Validación de código asíncrona
+Plug 'janko/vim-test' 
+Plug 'nvim-tree/nvim-tree.lua'   " nvim-tree
+Plug 'akinsho/toggleterm.nvim'
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'windwp/nvim-autopairs'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'  " Plugin para la integración con Vim/Neovim
+Plug 'easymotion/vim-easymotion'
+call plug#end()
+colorscheme nord
+
+"CONFIG FOR TREE
+
+lua << EOF
+require'nvim-tree'.setup {}
+EOF
+
+nnoremap <C-n> :NvimTreeToggle<CR>
+
+"CONFIG FOR TERMINAL
+
+lua << EOF
+require("toggleterm").setup{
+  open_mapping = [[<c-t>]], -- Tecla para abrir el terminal (Ctrl + t)
+  direction = 'horizontal',  -- Cambia a 'vertical' o 'tab' si prefieres
+}
+EOF
+
+
+
+lua << EOF
+require('lualine').setup {
+    options = {
+        theme = 'nord', -- Cambia el tema si lo deseas
+    },
+    sections = {
+        lualine_b = { 'branch' }, -- Agrega 'branch' para mostrar la rama de Git
+    },
+}
+EOF
+
+lua << EOF
+require('nvim-autopairs').setup{}
+EOF/
