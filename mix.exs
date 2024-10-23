@@ -40,13 +40,14 @@ defmodule RealDealApi.MixProject do
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
-      {:jason, "~> 1.2"},
+      {:jason ,"~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:bcrypt_elixir, "~> 3.2"},
       {:guardian, "~> 2.3"},
       {:guardian_db, "~> 2.0"},
-      {:faker, "~> 0.18", only: :test}
+      {:faker, "~> 0.18", only: :test},
+      {:ex_machina, "~> 2.8"}
     ]
   end
 
