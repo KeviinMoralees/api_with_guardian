@@ -17,7 +17,7 @@ defmodule RealDealApi.Accounts.Account do
     end
 
   def changeset(account, attrs) do
-    
+
     account
     |> cast(attrs, all_fields())
     |> validate_required(all_fields() -- @optional_fields)
